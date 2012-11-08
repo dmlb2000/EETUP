@@ -7,6 +7,12 @@
  DESCRIPTION:  Code for NMR data translation software.
  ------------------------------------------------------------------------------
  */
+/*
+ * Include Statements
+ */
+#include <cstring>
+
+
 using namespace std;
 /*
  -------------------------------------------------------------------------------
