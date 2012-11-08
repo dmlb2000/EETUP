@@ -9,6 +9,10 @@
  version name softwareVersion updated.
  ------------------------------------------------------------------------------
  */
+#include <ctype.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
 #include "fstream"
 #include "iostream"
 #include "iomanip"
@@ -19,22 +23,71 @@ const int name_length = 200;
 const int max_chars = 1048576;
 const int max_points = 524288;
 const char softwareVersion[] = "ag2en.100412a";
-//
+
+/*
+ * Return the usage to stdout C++ style.
+ */
+void usage(char *progname)
+{
+	cout << progname << " -i FILE -o FILE [-b]" << endl << endl;
+	cout << "\t-i FILE - Input VNMR file name." << endl;
+	cout << "\t-o FILE - Output ENUF file name." << endl;
+	cout << "\t-b      - Byte Swap the data." << endl;
+}
+
 int main( int argc, char* argv[])
 {
 	char infile[name_length], outfile[name_length];
-	int endian_reply;
+	bool endian_reply = false;
+	int c;
+	while ((c = getopt (argc, argv, "i:o:bh")) != -1)
+	{
+		switch (c)
+		{
+			case 'i':
+			strcpy(optarg, infile);
+			break;
+			case 'o':
+			strcpy(optarg, outfile);
+			break;
+			case 'b':
+			endian_reply = true;
+			break;
+			case 'h':
+			usage(argv[0]);
+			return 0;
+			break;
+			case '?':
+			if(optopt == 'i')
+				cerr << "Option 'i' requires an argument" << endl;
+			else if(optopt == 'o')
+				cerr << "Option 'o' requires an argument" << endl;
+			else if (isprint (optopt))
+				cerr << "Unknown Option -" << optopt << endl;
+			else
+				cerr << "Unknown option character `\\x" << hex << optopt << "'." << endl;
+			return 1;
+			break;
+			default:
+			usage(argv[0]);
+			return 1;
+			break;
+		}
+	}
+	
 /*
 ------------------------------------------------------------------------------
  Interactively enter starting information at run time.
 ------------------------------------------------------------------------------
 */
+/*
 	cout << "\nEnter name of VNMR file: ";
 	cin.getline(infile, name_length);
 	cout << "Enter name of ENUF file: ";
 	cin.getline(outfile, name_length);
 	cout << "Do a big endian/little endian byte swap (y/n)?: ";
     cin.getline((char *) &endian_reply, sizeof(int));
+*/
 /*
 ------------------------------------------------------------------------------
  Connect input stream to file containing VNMR data, and terminate program
@@ -71,7 +124,7 @@ int main( int argc, char* argv[])
 ------------------------------------------------------------------------------
 */
 	indata.read((char *) &filehead, fileheadsize);
-	if(endian_reply == 'y')
+	if(endian_reply)
 	{
 		hdr_ptr = (char*) &filehead.nblocks;
 		for(I0 = 0; I0 < 6; I0 += 1)
@@ -128,7 +181,7 @@ int main( int argc, char* argv[])
 	for(I1 = 0; I1 < filehead.nblocks; I1++)
 	{
 		indata.read((char *) &blockhead, blockheadsize);
-		if(endian_reply == 'y')
+		if(endian_reply)
 		{
 			hdr_ptr = (char*) &blockhead.scale;
 			for(I0 = 0; I0 < 4; I0 += 1)
@@ -162,7 +215,7 @@ int main( int argc, char* argv[])
                 indata.read((char *) complex_signal_float, filehead.tbytes); 
                 for(I2 = 0; I2 < filehead.np; I2++)
 				{
-					if(endian_reply == 'y')
+					if(endian_reply)
 					{
 						reverse_byte_order((char *) &complex_signal_float[I2],
 										   sizeof(float));
@@ -178,7 +231,7 @@ int main( int argc, char* argv[])
 					indata.read((char *) complex_signal_short, filehead.tbytes); 
 					for(I2 = 0; I2 < filehead.np; I2++) 
 					{
-						if(endian_reply == 'y')
+						if(endian_reply)
 						{
 							reverse_byte_order((char *) &complex_signal_short[I2],
 											   sizeof(short));
@@ -192,7 +245,7 @@ int main( int argc, char* argv[])
 					indata.read((char *) complex_signal_int, filehead.tbytes); 
 					for(I2 = 0; I2 < filehead.np; I2++)
 					{
-						if(endian_reply == 'y')
+						if(endian_reply)
 						{
 							reverse_byte_order((char *) &complex_signal_int[I2],
 											   sizeof(int));
