@@ -1,7 +1,7 @@
 PY_LIBS = 
 PYC_LIBS = $(addsuffix c,$(PY_LIBS))
 
-BINS = ag2en nt2en
+BINS = ag2en nt2en br2en ENUF_reader
 INST_BINS = $(addprefix ../bin/,$(BINS))
 
 all: $(BINS) $(PYC_LIBS)
@@ -43,9 +43,13 @@ endef
 $(foreach bin,$(BINS),$(eval $(call CXX_TEMPLATE,$(bin))))
 $(eval $(call LINK_TEMPLATE,ag2en,ag2en.o))
 $(eval $(call LINK_TEMPLATE,nt2en,nt2en.o))
+$(eval $(call LINK_TEMPLATE,br2en,br2en.o))
+$(eval $(call LINK_TEMPLATE,ENUF_reader,ENUF_reader.o))
 
 ag2en.o:: ENUF_objects.h
 
 nt2en.o:: ENUF_objects.h
+
+br2en.o:: ENUF_objects.h
 
 
