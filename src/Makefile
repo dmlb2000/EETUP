@@ -2,6 +2,8 @@ PY_LIBS =
 PYC_LIBS = $(addsuffix c,$(PY_LIBS))
 
 LIBS=-lrappture
+LDFLAGS=-L/apps/share/rappture/lib
+CPPFLAGS=-I/apps/share/rappture/include
 
 BINS = ag2en nt2en br2en ENUF_reader ENUF_tool
 INST_BINS = $(addprefix ../bin/,$(BINS))
