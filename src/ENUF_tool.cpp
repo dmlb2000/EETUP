@@ -29,8 +29,6 @@ int main( int argc, char* argv[])
     RpLibrary* lib;
     int err = 0;
 
-    infile[0] = outfile[0] = '\0';
-
     if(argc < 2)
 	return -1;
 
@@ -42,8 +40,8 @@ int main( int argc, char* argv[])
         cout << "creation of library failed" << endl;
     }
     err = rpGetString(lib,path,&infile);
-    if (retCStr != NULL) {
-        cout << "retCStr = " << retCStr << endl;
+    if (infile != NULL) {
+        cout << "infile = " << infile << endl;
     }
     else {
         cout << "Failed to get infile." << endl;
@@ -100,7 +98,7 @@ int main( int argc, char* argv[])
 ------------------------------------------------------------------------------
 */
     int
-    I0, numberPoints, numberFIDs, first_point, last_point, index;
+    I0, numberPoints, numberFIDs, index;
     float
     complex_point_float[max_points];
 	char

@@ -2,7 +2,7 @@ PY_LIBS =
 PYC_LIBS = $(addsuffix c,$(PY_LIBS))
 
 LIBS=-lrappture
-LDFLAGS=-L/apps/share/rappture/lib
+LDFLAGS=-L/apps/share/rappture/lib -Wl,-rpath=/apps/share/rappture/lib
 CPPFLAGS=-I/apps/share/rappture/include
 
 BINS = ag2en nt2en br2en ENUF_reader ENUF_tool
@@ -49,6 +49,7 @@ $(eval $(call LINK_TEMPLATE,ag2en,ag2en.o))
 $(eval $(call LINK_TEMPLATE,nt2en,nt2en.o))
 $(eval $(call LINK_TEMPLATE,br2en,br2en.o))
 $(eval $(call LINK_TEMPLATE,ENUF_reader,ENUF_reader.o))
+$(eval $(call LINK_TEMPLATE,ENUF_tool,ENUF_tool.o))
 
 ag2en.o:: ENUF_objects.h
 
