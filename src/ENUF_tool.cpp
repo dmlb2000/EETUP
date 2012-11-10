@@ -10,21 +10,67 @@
 #include "fstream"
 #include "iostream"
 #include "math.h"
+#include "rappture.h"
 using namespace std;
-const int name_length = 200;
+
 const int max_points = 1048576;
 //
 int main( int argc, char* argv[])
 {
-    char infile[name_length], outfile[name_length];
-	int file_reply;
-    ofstream outdata;
+    const char* infile = NULL;
+    const char* fpoint_str = NULL;
+    const char* lpoint_str = NULL;
+    const char* path = "input.string(enuffile).current";
+    const char* fpoint_path = "input.integer(firstpoint).current";
+    const char* lpoint_path = "input.integer(lastpoint).current";
+    const char* graph_path = "output.curve(result).component.xy";
+    char output_str[1024];
+    int first_point, last_point;
+    RpLibrary* lib;
+    int err = 0;
+
+    infile[0] = outfile[0] = '\0';
+
+    if(argc < 2)
+	return -1;
+
+    lib = rpLibrary(argv[1]);
+    if (lib != NULL) {
+        cout << "creation of library successful" << endl;
+    }
+    else {
+        cout << "creation of library failed" << endl;
+    }
+    err = rpGetString(lib,path,&infile);
+    if (retCStr != NULL) {
+        cout << "retCStr = " << retCStr << endl;
+    }
+    else {
+        cout << "Failed to get infile." << endl;
+    }
+
+    err = rpGetString(lib,fpoint_path,&fpoint_str);
+    if (fpoint_str != NULL) {
+        cout << "fpoint_str = " << fpoint_str << endl;
+    }
+    else {
+        cout << "Failed to get fpoint_str." << endl;
+    }
+
+    err = rpGetString(lib,lpoint_path,&lpoint_str);
+    if (lpoint_str != NULL) {
+        cout << "lpoint_str = " << lpoint_str << endl;
+    }
+    else {
+        cout << "Failed to get lpoint_str." << endl;
+    }
 /*
 ------------------------------------------------------------------------------
  Enter starting information at run time.  Names of the input ENUF file and
  an output text file are requested.
 ------------------------------------------------------------------------------
 */
+/*
     cout << "Enter input ENUF filename: ";
     cin.getline(infile, name_length);
 	cout << "Write text data to an output file (y/n)?: ";
@@ -35,6 +81,7 @@ int main( int argc, char* argv[])
 		cin.getline(outfile, name_length);
         outdata.open(outfile, ios::out);
 	}
+*/
 /*
 ------------------------------------------------------------------------------
  Connect input stream to file containing ENUF data, and terminate program
@@ -76,10 +123,14 @@ int main( int argc, char* argv[])
  Write data to console and to output file if specified.
 ------------------------------------------------------------------------------
 */
+/*
 	cout << "\nEnter first complex point of range: ";
 	cin >> first_point;
 	cout << "\nEnter last complex point of range: ";
 	cin >> last_point;
+*/
+	first_point = atoi(fpoint_str);
+	last_point = atoi(lpoint_str);
 	for(I0 = 0; I0 < first_point - 1; I0++)
 	{
             index = I0 * 2;
@@ -93,6 +144,15 @@ int main( int argc, char* argv[])
 		indata.read((char *) &complex_point_float[index], 4);
 		index += 1;
 		indata.read((char *) &complex_point_float[index], 4);
+		sprintf(output_str, "%g %g\n", complex_point_float[index-1], complex_point_float[index]);
+		err = rpPutString(lib,graph_path,output_str,1);
+		if (err == 0) {
+			cout << "rpPutString successful" << endl;
+		}
+		else {
+			cout << "rpPutString failed" << endl;
+		}
+/*
 		cout << "\n" << I0 << "   " << complex_point_float[index-1]
 		<< "   " << complex_point_float[index];
 		if(file_reply == 'y')
@@ -100,6 +160,7 @@ int main( int argc, char* argv[])
 			outdata << complex_point_float[index-1]
 			<< "   " << complex_point_float[index] << "\n";
 		}
+*/
 	}
 /*
 ------------------------------------------------------------------------------
@@ -107,9 +168,5 @@ Close input file.
 ------------------------------------------------------------------------------
 */
     indata.close();
-	if(file_reply == 'y')
-	{
-		outdata.flush();
-		outdata.close();
-	}
+    rpFreeLibrary(&lib);
 }
