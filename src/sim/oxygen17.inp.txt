@@ -1,0 +1,1 @@
+SysName (2) : oxygen17       - single O-17 nuclide NSpins  (0) : 1              - one spin Iso(0)  (2) : 17O            - isotope = O-17

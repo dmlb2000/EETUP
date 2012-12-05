@@ -1,0 +1,12 @@
+7812.5
+1000000.
+40694098.
+1100.
+oxygen17.inp
+UranylAmmCarbStructC.sys
+UranylAmmCarbStructC.dat
+1
+90spirals2.dat
+4000
+0
+20627
