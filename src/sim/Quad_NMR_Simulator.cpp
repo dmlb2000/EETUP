@@ -187,7 +187,18 @@ int main( int argc, char* argv[])
         cin >> orientations;
         LowerBound = 0;
         UpperBound = orientations;
+        double h;
+#pragma omp parallel for private(h)
         for(I0 = 0; I0 < orientations; I0++)
+        {
+		h = -1 + 2*IO/(orientations-1);
+		theta[IO] = arccos(h);
+		if (IO=0 || IO=orientations-1)
+			phi[IO] = 0;
+		else
+			phi[IO] = (phi[IO-1] + 3.6/sqrt(orientations*(1-h^2))) mod (twopi);
+        }
+#if 0
 		{
 			cout << endl << "Enter theta (in deg) for orientation number " 
 			<< I0 << ": "; 
@@ -197,6 +208,7 @@ int main( int argc, char* argv[])
 			theta[I0] *= pi / 180.;
 			phi[I0] *= pi / 180.;
 		}
+#endif
 	}
 /*
  ------------------------------------------------------------------------------
