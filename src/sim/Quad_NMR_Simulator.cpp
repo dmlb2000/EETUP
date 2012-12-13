@@ -185,6 +185,7 @@ int main( int argc, char* argv[])
 	{
         cout << "Enter number of orientations: ";
         cin >> orientations;
+	progressnumber = 10000;
         LowerBound = 0;
         UpperBound = orientations;
         double h, kp;

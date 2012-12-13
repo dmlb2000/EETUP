@@ -2,11 +2,8 @@
 1000000.
 40694098.
 1100.
-oxygen17.inp
-UranylAmmCarbStructC.sys
+oxygen17.inp.txt
+UranylAmmCarbStructC.sys.txt
 UranylAmmCarbStructC.dat
-1
-90spirals2.dat
-4000
 0
-20627
+200000
