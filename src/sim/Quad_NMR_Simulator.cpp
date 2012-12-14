@@ -195,7 +195,6 @@ int main( int argc, char* argv[])
 	r[0]     = 0.0;
 	theta[0] = PI;
 	phi[0]  = 0;
-#pragma omp parallel for private(h)
         for(I0 = 1; I0 < n-1; I0++)
         {
 		kp = a*I0 + b;
