@@ -35,9 +35,9 @@ const int WordLength = 160;
 int main( int argc, char* argv[])
 {
 	double 
-	dwell, DigRes, IAngMom, omega_L, center_ppm, sw_Hz, GammaIbar, GammaSbar;
+	dwell, IAngMom, omega_L, center_ppm, sw_Hz, GammaIbar, GammaSbar;
 	int 
-	I0, I1, I2, numpts, NumberSSpins, progressnumber;
+	I0, I1, I2, numpts, NumberSSpins, progressnumber = 10000;
 	char
 	Infile[WordLength], ISNetworkFile[WordLength], outfile[WordLength],
 	OrientationFile[WordLength];
@@ -59,18 +59,17 @@ int main( int argc, char* argv[])
    to radians/sec (units of angular frequency)
  ------------------------------------------------------------------------------
 */
-	cout << endl << "Enter digital resolution, in Hz/pt: ";
-	cin >> DigRes;
+    cout << "Enter acquisition dwell time, in seconds: ";
+    cin >> dwell;
+    sw_Hz = 1.0 / dwell;
 //
-    cout << "Enter spectral width, in Hz: ";
-	cin >> sw_Hz;
-    numpts = (int) (sw_Hz / DigRes);
-    dwell = 1.0 / sw_Hz;
+    cout << "Enter number of points to acquire: ";
+    cin >> numpts;
 //
     cout << "Enter frequency at 0 ppm, in Hz: ";
 	cin >> omega_L;
 	omega_L *= twopi;
-    //
+//
     cout << "Enter spectrum center position, in ppm: ";
 	cin >> center_ppm;
 //
@@ -127,9 +126,9 @@ int main( int argc, char* argv[])
 	max_data = 524288, maxangles = 65536;
 	double  
 	theta[maxangles], phi[maxangles], eta, AQ, Vxx, Vyy, Vzz, Q_moment, 
-	delta_xx, delta_yy, delta_zz, alp, bet, gam, cos_bet, sin_bet,
-	sin_2bet, cos_2gam, iso_cs, delta_cs, eta_cs, 
-	real_part[max_data], imag_part[max_data],
+	Q_SpectralWidth, CS_SpectralWidth, Total_SpectralWidth, delta_xx,
+    delta_yy, delta_zz, alp, bet, gam, cos_bet, sin_bet, sin_2bet, cos_2gam,
+    iso_cs, delta_cs, eta_cs, real_part[max_data], imag_part[max_data],
 	ISprefactor[NumberSSpins], rho[NumberSSpins],
 	cos2psi[NumberSSpins], sin2psi[NumberSSpins],
 	sin_2psi[NumberSSpins], psi, ISdistance, FirstSphericalHarmonic; 
@@ -185,10 +184,9 @@ int main( int argc, char* argv[])
 	{
         cout << "Enter number of orientations: ";
         cin >> orientations;
-	progressnumber = 10000;
         LowerBound = 0;
         UpperBound = orientations;
-        double h, kp;
+	double h, kp;
 	int n = orientations;
 	double p = 1.0/2.0;
 	double a = 1 - 2*p/(n-3);
@@ -209,6 +207,8 @@ int main( int argc, char* argv[])
 	theta[n-1] = 0;
 	phi[n-1]   = 0;
 #if 0
+
+        for(I0 = 0; I0 < orientations; I0++)
 		{
 			cout << endl << "Enter theta (in deg) for orientation number " 
 			<< I0 << ": "; 
@@ -283,7 +283,7 @@ int main( int argc, char* argv[])
 	indata >> Q_moment >> Vxx >> Vyy >> Vzz; 
 	AQ = (e_charge * Vzz * Q_moment ) 
 	/ (4.0 * hbar * IAngMom * ((2.0*IAngMom)-1.0)); 
-	eta = (Vxx-Vyy) / Vzz; 
+	eta = (Vxx-Vyy) / Vzz;
 /*
  ------------------------------------------------------------------------------
  Now read heteronuclear dipolar coupling data, and close input file upon
@@ -306,7 +306,27 @@ int main( int argc, char* argv[])
         ISprefactor[I0] = -0.5*GammaIbar*GammaSbar*hbar
 		/(ISdistance*ISdistance*ISdistance);
 	}
-	indata.close(); 
+	indata.close();
+/*
+ ------------------------------------------------------------------------------
+ Compute a spectral width that will contain the entire line, including tbe
+ first order quadrupolar lineshape.  The maximum inhomogeneous linewdth is
+ estimated to be the sum of the width of the quadrupolar powder line and the
+ width of the CSA pattern.  The desired spectral width is two times the 
+ maximum inhomogeneous linewidth, and is specified by halving the dwell time
+ until it is large enough.  The frequency resolution is kept constant by
+ doubling the number of acquisition points every time the spectral width is 
+ halved.
+ ------------------------------------------------------------------------------
+*/    
+    Q_SpectralWidth = abs(3. * AQ * ((2.0*IAngMom)-1.0) / pi);
+    CS_SpectralWidth  = abs(delta_zz - delta_xx) / (2. * pi);
+    Total_SpectralWidth = 2. * (Q_SpectralWidth + CS_SpectralWidth);
+    while (1./dwell < Total_SpectralWidth)
+	{
+		dwell *= 0.5;
+		numpts *= 2;
+	}
 /*
  ------------------------------------------------------------------------------
  Initialize variables, and calculate expressions that appear frequently
