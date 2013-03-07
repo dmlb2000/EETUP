@@ -23,6 +23,7 @@
  */
 #include "iomanip" 
 #include "gamma.h" 
+#include "fftw3.h"
 #include "Cho_1.h"
 using namespace std;
 complex i(0,1);
@@ -128,7 +129,7 @@ int main( int argc, char* argv[])
 	theta[maxangles], phi[maxangles], eta, AQ, Vxx, Vyy, Vzz, Q_moment, 
 	Q_SpectralWidth, CS_SpectralWidth, Total_SpectralWidth, delta_xx,
     delta_yy, delta_zz, alp, bet, gam, cos_bet, sin_bet, sin_2bet, cos_2gam,
-    iso_cs, delta_cs, eta_cs, real_part[max_data], imag_part[max_data],
+    iso_cs, delta_cs, eta_cs,
 	ISprefactor[NumberSSpins], rho[NumberSSpins],
 	cos2psi[NumberSSpins], sin2psi[NumberSSpins],
 	sin_2psi[NumberSSpins], psi, ISdistance, FirstSphericalHarmonic; 
@@ -138,7 +139,10 @@ int main( int argc, char* argv[])
 	Hint, H_csiso, rho0, rho1, 
 	Ud1, i_td1_Hint, Ud2, i_td2_Hint, i_dwell_Hint, Udwell, detectop;
 	complex 
-	i_dwell, spur; 
+	i_dwell, spur;
+
+	fftw_complex *data;
+	fftw_plan fp;
 /*
  ------------------------------------------------------------------------------
  Enter orientation data as (theta,phi) pairs, either from a file or manually.
@@ -340,10 +344,11 @@ int main( int argc, char* argv[])
  Null the one-dimensional vector that will be used to store the simulated FID.
  ------------------------------------------------------------------------------
 */
+	data = (fftw_complex *)malloc(sizeof(fftw_complex)*numpts);
 	for(I0 = 0; I0 < numpts; I0++)
 	{
-        real_part[I0] = 0.0;
-        imag_part[I0] = 0.0;
+       	data[I0][0] = 0.0;
+        data[I0][1] = 0.0;
 	}
 /*
  ------------------------------------------------------------------------------
@@ -404,8 +409,8 @@ int main( int argc, char* argv[])
         Udwell = exp(-i_dwell_Hint);
         rho1 = rho0;
         spur = trace(rho1,detectop);
-        real_part[0] += Re(spur);
-        imag_part[0] += Im(spur);
+        data[0][0] += Re(spur);
+        data[0][1] += Im(spur);
 /*
  ------------------------------------------------------------------------------
  Each I1 loop is a single point acquisition of the FID.
@@ -415,8 +420,8 @@ int main( int argc, char* argv[])
 			{
 				rho1.sim_trans_ip(Udwell);
 				spur = trace(rho1,detectop);
-				real_part[I1] += Re(spur); 
-				imag_part[I1] += Im(spur); 
+				data[I1][0] += Re(spur); 
+				data[I1][1] += Im(spur); 
 			}
         if(fmod((double) I0, (double) progressnumber) == 0)
 		{
@@ -430,6 +435,26 @@ int main( int argc, char* argv[])
  Write the felix output file.
  ------------------------------------------------------------------------------
 */
-	felix_time_out_new(numpts, dwell, omega_L, outfile_ptr, twopi, 
+	/*felix_time_out_new(numpts, dwell, omega_L, outfile_ptr, twopi, 
 					   real_part, imag_part); 
+	*/
+	for(I0 = 0; I0 < numpts; I0++)
+	{
+		if(I0&1)
+		{
+			data[I0][0] = -data[I0][0];
+			data[I0][1] = -data[I0][1];
+		}
+	}
+	fp = fftw_plan_dft_1d(numpts, data, data, FFTW_FORWARD, FFTW_ESTIMATE);
+	fftw_execute(fp);
+	/* print to gnuplot stuff */
+	ofstream output(outfile_ptr);
+	output << "Real,Imaginary" << endl;
+	for(I0 = 0; I0 < numpts; I0++)
+		output << data[I0][0] << "," << data[I0][1] << endl;
+		//output.write(data[I0][0] << "," << data[I0][1] << endl;
+	output.close();
+	fftw_free(data);
+	fftw_destroy_plan(fp);
 }
