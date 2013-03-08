@@ -5,7 +5,7 @@ LIBS=-lrappture
 LDFLAGS=-L/apps/share/rappture/lib -Wl,-rpath=/apps/share/rappture/lib
 CPPFLAGS=-I/apps/share/rappture/include
 
-BINS = ag2en nt2en br2en ENUF_reader ENUF_tool
+BINS = ag2en nt2en br2en ENUF_reader ENUF_tool csv_fft_csv
 INST_BINS = $(addprefix ../bin/,$(BINS))
 
 all: $(BINS) $(PYC_LIBS)
