@@ -1,3 +1,4 @@
 #!/bin/sh
 
+/usr/bin/ratpoison -f /usr/share/hubzero-ratpoison-captive/ratpoisonrc &
 firefox http://my.emsl.pnl.gov/myemsl/search/simple
