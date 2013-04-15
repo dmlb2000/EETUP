@@ -1,30 +1,32 @@
+#include "fstream"
+#include "iostream"
 #include "iomanip"
+#include "vector"
+#include "cstdlib"
+#include "cassert"
+
 #include "fftw3.h"
+
 using namespace std;
 
 int main(int argc, char **argv)
 {
 	int I0,numpts;
 	ifstream incsv;
-	float rtmp, ftmp;
-	char comma;
+	int rtmp, itmp;
 	vector<float> real;
 	vector<float> img;
 
 	fftw_complex *data;
+	fftw_plan fp;
 
-	if(argc < 2)
-		return -1;
-
-	if(argv[1][0] == '-')
-		incsv = cin;
-	else
-		incsv.open(argv[1], ios::in);
-
-	while(incsv >> rtmp >> comma >> itmp)
+	while(!cin.eof())
 	{
-		real.push_back(rtmp);
-		img.push_back(itmp);
+		cin >> rtmp >> itmp;
+		cerr << "read something" << endl;
+		cerr.flush();
+		real.push_back((float)rtmp);
+		img.push_back((float)itmp);
 	}
 
 	assert(real.size() == img.size());
@@ -44,11 +46,9 @@ int main(int argc, char **argv)
         fp = fftw_plan_dft_1d(numpts, data, data, FFTW_FORWARD, FFTW_ESTIMATE);
         fftw_execute(fp);
         /* print to gnuplot stuff */
-        ofstream output(outfile_ptr);
         cout << "Real,Imaginary" << endl;
         for(I0 = 0; I0 < numpts; I0++)
                 cout << data[I0][0] << "," << data[I0][1] << endl;
-                //cout.write(data[I0][0] << "," << data[I0][1] << endl;
         fftw_free(data);
         fftw_destroy_plan(fp);
 	return 0;

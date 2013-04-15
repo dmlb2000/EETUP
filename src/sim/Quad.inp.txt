@@ -4,6 +4,6 @@
 1100.
 oxygen17.inp.txt
 UranylAmmCarbStructC.sys.txt
-UranylAmmCarbStructC.dat
+UranylAmmCarbStructC.csv
 0
 20000

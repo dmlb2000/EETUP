@@ -164,6 +164,7 @@ int main( int argc, char* argv[])
 ------------------------------------------------------------------------------
 */
     ofstream outdata;
+    ofstream csvdata("test.csv", ios::out);
     outdata.open(outfile, ios::out);
 /*
 ------------------------------------------------------------------------------
@@ -185,8 +186,10 @@ int main( int argc, char* argv[])
         {
             index = I1 * 2;
             indata.read((char *) &complex_point_float[index], 4);
+            csvdata << complex_point_float[index];
 			index += 1;
             indata.read((char *) &complex_point_float[index], 4);
+            csvdata << "," << complex_point_float[index] << endl;
         }
         index += 1;
 		if(endian_reply == 'y')
@@ -213,6 +216,7 @@ int main( int argc, char* argv[])
  multi-dimensional).
 ------------------------------------------------------------------------------
 */
+	cout << index << " " << structure.npts[0] << endl;
         outdata.write((char *) complex_point_float, 4*index);
     }
 /*
@@ -243,6 +247,7 @@ int main( int argc, char* argv[])
  Flush the output data and close the input and output files.
 ------------------------------------------------------------------------------
 */
+    csvdata.close();
     indata.close();
 	outdata.flush();
     outdata.close();
