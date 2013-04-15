@@ -49,6 +49,7 @@ int main( int argc, char* argv[])
  if file not found.
 ------------------------------------------------------------------------------
 */
+    cout << infile << endl;
     ifstream indata(infile);
     if(!indata)
     {
@@ -175,6 +176,9 @@ int main( int argc, char* argv[])
 	outdata.write((char *) &softwareVersion, 12);
 	outdata.write((char *) &structure.actual_npts[0], 4);
 	outdata.write((char *) &numberFIDs, sizeof(int));
+    cout << indata.tellg() << endl;
+    cout << numberFIDs << endl;
+    cout << structure.npts[0] << endl;
     for(I0 = 0; I0 < numberFIDs; I0++)
     {
         for(I1 = 0; I1 < structure.npts[0]; I1++)

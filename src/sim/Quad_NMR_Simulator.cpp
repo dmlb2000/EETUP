@@ -438,23 +438,33 @@ int main( int argc, char* argv[])
 	/*felix_time_out_new(numpts, dwell, omega_L, outfile_ptr, twopi, 
 					   real_part, imag_part); 
 	*/
-	for(I0 = 0; I0 < numpts; I0++)
-	{
-		if(I0&1)
-		{
-			data[I0][0] = -data[I0][0];
-			data[I0][1] = -data[I0][1];
-		}
-	}
-	fp = fftw_plan_dft_1d(numpts, data, data, FFTW_FORWARD, FFTW_ESTIMATE);
-	fftw_execute(fp);
+	//for(I0 = 0; I0 < numpts; I0++)
+	//{
+	//	if(I0&1)
+	//	{
+	//		data[I0][0] = -data[I0][0];
+	//		data[I0][1] = -data[I0][1];
+	//	}
+	//}
+	/*fp = fftw_plan_dft_1d(numpts, data, data, FFTW_FORWARD, FFTW_ESTIMATE);
+	fftw_execute(fp); */
 	/* print to gnuplot stuff */
 	ofstream output(outfile_ptr);
-	output << "Real,Imaginary" << endl;
+	//output << "Real,Imaginary" << endl;
+	cout << numpts << endl;
+	float tmp_float;
 	for(I0 = 0; I0 < numpts; I0++)
-		output << data[I0][0] << "," << data[I0][1] << endl;
-		//output.write(data[I0][0] << "," << data[I0][1] << endl;
+	{
+		tmp_float = (float)data[I0][0];
+		output.write((char *)&(tmp_float), sizeof(float));
+	}
+	for(I0 = 0; I0 < numpts; I0++)
+	{
+		tmp_float = (float)data[I0][1];
+		output.write((char *)&(tmp_float), sizeof(float));
+	}
+	//	output << data[I0][0] << "," << data[I0][1] << endl;
 	output.close();
-	fftw_free(data);
-	fftw_destroy_plan(fp);
+	//fftw_free(data);
+	//fftw_destroy_plan(fp);
 }

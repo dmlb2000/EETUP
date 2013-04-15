@@ -396,27 +396,27 @@ void get_file_data(char *data_source,
     ifstream source_inputs(data_source);
 //
     source_inputs.getline(dummy_string, *name_length);
-    string_length = (int) source_inputs.gcount() - 2;
+    string_length = (int) source_inputs.gcount() - 1;
     memcpy((void *) infile, (void *) dummy_string, string_length);
     memcpy((void *) &infile[string_length], (void *) &null_character, 1);
 //
     source_inputs.getline(dummy_string, *name_length);
-    string_length = (int) source_inputs.gcount() - 2;
+    string_length = (int) source_inputs.gcount() - 1;
     memcpy((void *) outfile, (void *) dummy_string, string_length);
     memcpy((void *) &outfile[string_length], (void *) &null_character, 1);
 //
 	source_inputs.getline(dummy_string, *name_length);
-    string_length = (int) source_inputs.gcount() - 2;
+    string_length = (int) source_inputs.gcount() - 1;
     memcpy((void *) JCAMP_origin, (void *) dummy_string, string_length);
     memcpy((void *) &JCAMP_origin[string_length], (void *) &null_character, 1);
 //
 	source_inputs.getline(dummy_string, *name_length);
-    string_length = (int) source_inputs.gcount() - 2;
+    string_length = (int) source_inputs.gcount() - 1;
     memcpy((void *) JCAMP_owner, (void *) dummy_string, string_length);
     memcpy((void *) &JCAMP_owner[string_length], (void *) &null_character, 1);
 //
 	source_inputs.getline(dummy_string, *name_length);
-    string_length = (int) source_inputs.gcount() - 2;
+    string_length = (int) source_inputs.gcount() - 1;
     memcpy((void *) JCAMP_sample, (void *) dummy_string, string_length);
     memcpy((void *) &JCAMP_sample[string_length], (void *) &null_character, 1);
 //		
