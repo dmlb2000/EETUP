@@ -1,0 +1,195 @@
+<?xml version="1.0"?>
+<run>
+    <tool>
+        <title>NMR/NWChem</title>
+        <about>Press simulate to get an NMR Spectra from NWChem.</about>
+        <command>python @tool/../bin/runit @driver</command>
+    </tool>
+    <input>
+        <string id="username">
+            <about>
+                <label>MyEMSL Username</label>
+                <hints>dmlb2000</hints>
+            </about>
+        </string>
+        <string id="passwd">
+            <about>
+                <label>MyEMSL Password</label>
+                <hints>***********</hints>
+            </about>
+        </string>
+        <string id="query">
+            <about>
+                <label>MyEMSL Query Parameters</label>
+                <description>The query parameters are key, value pairs separated on individual lines.</description>
+                <hints>NWChem.CML=uo2co3\nproposal=45791</hints>
+            </about>
+        </string>
+        <choice id="qloc">
+            <about>
+                <label>Query Set Location</label>
+                <description>Location of the Query Set</description>
+            </about>
+            <option>
+                <about>
+                    <label>Local</label>
+                    <description>Query set exists on the local workspace.</description>
+                </about>
+                <value>local</value>
+            </option>
+            <option>
+                <about>
+                    <label>MyEMSL</label>
+                    <description>Query set exists in MyEMSL.</description>
+                </about>
+                <value>myemsl</value>
+            </option>
+            <option>
+                <about>
+                    <label>Chinook</label>
+                    <description>Query set exists on Chinook.</description>
+                </about>
+                <value>chinook</value>
+            </option>
+            <option>
+                <about>
+                    <label>Aurora</label>
+                    <description>Query set exists on Aurora.</description>
+                </about>
+                <value>archive</value>
+            </option>
+        </choice>
+        <string id="queryset">
+            <about>
+                <label>ScalaBLAST Query Set</label>
+                <hints>/home/me/q.fa</hints>
+            </about>
+        </string>
+        <choice id="rloc">
+            <about>
+                <label>Reference Set Location</label>
+                <description>Location of the Reference Set</description>
+            </about>
+            <option>
+                <about>
+                    <label>Local</label>
+                    <description>Query set exists on the local workspace.</description>
+                </about>
+                <value>local</value>
+            </option>
+            <option>
+                <about>
+                    <label>MyEMSL</label>
+                    <description>Reference set exists in MyEMSL.</description>
+                </about>
+                <value>myemsl</value>
+            </option>
+            <option>
+                <about>
+                    <label>Chinook</label>
+                    <description>Reference set exists on Chinook.</description>
+                </about>
+                <value>chinook</value>
+            </option>
+            <option>
+                <about>
+                    <label>Aurora</label>
+                    <description>Reference set exists on Aurora.</description>
+                </about>
+                <value>archive</value>
+            </option>
+        </choice>
+        <string id="refset">
+            <about>
+                <label>ScalaBLAST Reference Set</label>
+                <hints>/home/me/db.fa</hints>
+            </about>
+        </string>
+        <choice id="btype">
+            <about>
+                <label>ScalaBLAST In/Out Types</label>
+                <description>This is whether you are quering against a protien or aminoacid set.</description>
+            </about>
+            <option>
+                <about>
+                    <label>BLASTn</label>
+                    <description>This runs a nucleotide vs nucleotide matching algorithm.</description>
+                </about>
+                <value>blastn</value>
+            </option>
+            <option>
+                <about>
+                    <label>BLASTp</label>
+                    <description>This runs a protien vs protien matching algorithm.</description>
+                </about>
+                <value>blastp</value>
+            </option>
+            <option>
+                <about>
+                    <label>BLASTx</label>
+                    <description>This runs a protien db vs translated nucleotide query matching algorithm.</description>
+                </about>
+                <value>blastx</value>
+            </option>
+            <option>
+                <about>
+                    <label>tBLASTn</label>
+                    <description>This runs a translated nucleotide db vs. protien query matching algorithm.</description>
+                </about>
+                <value>tblastn</value>
+            </option>
+            <option>
+                <about>
+                    <label>tBLASTx</label>
+                    <description>This runs a translated nucleotide db vs. translated nucleotide query matching algorithm.</description>
+                </about>
+                <value>tblastx</value>
+            </option>
+        </choice>
+        <choice id="size">
+            <about>
+                <label>Job Size</label>
+                <description>This shows the job size to run ScalaBLAST at.</description>
+            </about>
+            <option>
+                <about>
+                    <label>32</label>
+                    <description>Run at 32 nodes.</description>
+                </about>
+                <value>32</value>
+            </option>
+            <option>
+                <about>
+                    <label>64</label>
+                    <description>Run at 64 nodes.</description>
+                </about>
+                <value>64</value>
+            </option>
+            <option>
+                <about>
+                    <label>128</label>
+                    <description>Run at 128 nodes.</description>
+                </about>
+                <value>128</value>
+            </option>
+        </choice>
+        <string id="time">
+            <about>
+                <label>Job Time Limit</label>
+                <description>Maximum time you want the nodes for.</description>
+            </about>
+        </string>
+    </input>
+    <output>
+        <string id="status">
+            <about>
+                 <label>Status Output</label>
+            </about>
+        </string>
+        <string id="debug">
+            <about>
+                 <label>Debug Output</label>
+            </about>
+        </string>
+    </output>
+</run>
