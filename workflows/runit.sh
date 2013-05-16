@@ -9,4 +9,6 @@ kepler -runkar \
 	-password "$PASSWORD" \
 	-query 'proposal=45796#NWChem.CML=test_apr_17' \
 	-upmetadata 'proposal=45796#Tag=nmrpipe_test_may_16' \
-	NWChemNMR.kar
+	-simloc /home/dmlb2000/nmrtools/trunk/src/sim/Quad_NMR_Simulator \
+	-isoloc /home/dmlb2000/nmrtools/trunk/src/sim/oxygen17.inp.txt \
+	$PWD/NWChemNMR.kar
