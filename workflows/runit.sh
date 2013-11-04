@@ -12,5 +12,5 @@ kepler -runkar \
 	-upmetadata 'proposal=45796#Tag=nmrpipe_test_jun_19' \
 	-simloc /home/dmlb2000/nmrtools/trunk/src/sim/Quad_NMR_Simulator \
 	-isoloc /home/dmlb2000/nmrtools/trunk/src/sim/oxygen17.inp.txt \
-	-conv_nmrpipe_cmd '/usr/local/nmr/nmrbin.linux9/bin2pipe -bo 1056 -xN 256 -xT 128 -xMODE Complex -noswap' \
+	-conv_nmrpipe_cmd '/usr/local/nmrpipe/nmrbin.linux9/bin2pipe -bo 1056 -xN 256 -xT 128 -xMODE Complex -noswap' \
 	$PWD/NWChemNMR.kar
