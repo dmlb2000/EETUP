@@ -5,8 +5,8 @@ PASSWORD=""
 read -s -p "PASSWORD:" PASSWORD
 
 kepler -runkar \
-	-username "$USERNAME" \
-	-password "$PASSWORD" \
+	-myemsl_username "$USERNAME" \
+	-myemsl_password "$PASSWORD" \
 	-simquery 'proposal=45796#NWChem.CML=test_apr_17' \
 	-expquery 'proposal=45796#Tag=NMR_EXP_jun_19' \
 	-upmetadata 'proposal=45796#Tag=nmrpipe_test_jun_19' \
