@@ -4,7 +4,7 @@ Originally cloned from [EMSLHub](https://emslhub.emsl.pnl.gov/tools/nmrtools),
 this project is trying to support workflows that bridge scientific theory with
 experimental results.
 
-## Current Examples
+## Current Workflows
 
 ### NMR and NWChem Workflow
 
